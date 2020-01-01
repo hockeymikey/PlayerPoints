@@ -59,7 +59,7 @@ public class GiveCommand implements PointsCommand {
                 info.put(Flag.AMOUNT, "" + plugin.getAPI().look(id));
                 final String successMessage = LocalizeConfig.parseString(
                         LocalizeNode.POINTS_SUCCESS, info);
-                if(!successMessage.isEmpty()) {
+                if(!successMessage.isEmpty() && sender instanceof Player) {
                     sender.sendMessage(successMessage);
                 }
                 final Player target = Bukkit.getServer().getPlayer(id);
