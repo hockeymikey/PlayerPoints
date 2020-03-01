@@ -14,15 +14,14 @@ public class Importer {
     /**
      * Plugin instance.
      */
-    private PlayerPoints plugin;
+    private final PlayerPoints plugin;
 
     /**
      * Contructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public Importer(PlayerPoints plugin) {
+    public Importer(final PlayerPoints plugin) {
         this.plugin = plugin;
     }
 
@@ -30,8 +29,8 @@ public class Importer {
      * Check whether we need to import and where we are importing from.
      */
     public void checkImport() {
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.importSQL
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.importSQL
                 && config.getStorageType() == StorageType.MYSQL) {
             importSQL(config.importSource);
             plugin.getConfig().set("mysql.import.use", false);
@@ -41,21 +40,20 @@ public class Importer {
 
     /**
      * Imports from SQLite / YAML to MYSQL.
-     * 
-     * @param source
-     *            - Type of storage to read from.
+     *
+     * @param source - Type of storage to read from.
      */
-    private void importSQL(StorageType source) {
-        switch(source) {
-        case YAML:
-            YAMLImport yaml = new YAMLImport(plugin);
-            yaml.doImport();
-            break;
-        case SQLITE:
-            SQLiteImport sqlite = new SQLiteImport(plugin);
-            sqlite.doImport();
-        default:
-            break;
+    private void importSQL(final StorageType source) {
+        switch (source) {
+            case YAML:
+                final YAMLImport yaml = new YAMLImport(plugin);
+                yaml.doImport();
+                break;
+            case SQLITE:
+                final SQLiteImport sqlite = new SQLiteImport(plugin);
+                sqlite.doImport();
+            default:
+                break;
         }
     }
 }

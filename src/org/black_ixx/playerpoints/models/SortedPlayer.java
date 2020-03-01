@@ -11,23 +11,21 @@ public class SortedPlayer implements Comparable<SortedPlayer> {
     /**
      * Player name.
      */
-    final String name;
+    private final String name;
 
     /**
      * Player points.
      */
-    final int points;
+    private final int points;
 
     /**
      * Constructor.
-     * 
-     * @param name
-     *            - Player name.
-     * @param points
-     *            - Point amount.
+     *
+     * @param name   - Player name.
+     * @param points - Point amount.
      */
-    public SortedPlayer(String name, int points) {
-        this.name = name;
+    public SortedPlayer(final String name, final int points) {
+        this.name   = name;
         this.points = points;
     }
 
@@ -50,12 +48,13 @@ public class SortedPlayer implements Comparable<SortedPlayer> {
     }
 
     @Override
-    public int compareTo(SortedPlayer o) {
-        if(this.getPoints() > o.getPoints()) {
+    public int compareTo(final SortedPlayer o) {
+        if (this.points > o.points) {
             return -1;
-        } else if(this.getPoints() < o.getPoints()) {
+        }
+        else if (this.points < o.points) {
             return 1;
         }
-        return this.getName().compareTo(o.getName());
+        return this.name.compareTo(o.name);
     }
 }

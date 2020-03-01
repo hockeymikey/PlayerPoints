@@ -15,11 +15,10 @@ public class OneFiveTwoUpdate extends UpdateModule {
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - plugin instance.
+     *
+     * @param plugin - plugin instance.
      */
-    public OneFiveTwoUpdate(PlayerPoints plugin) {
+    public OneFiveTwoUpdate(final PlayerPoints plugin) {
         super(plugin);
         targetVersion = new Version("1.52");
         targetVersion.setIgnorePatch(true);

@@ -66,39 +66,38 @@ public enum LocalizeNode {
     HELP_GIVE("message.help.give",
             "&7/points give <name> <points> &6: Generate points for given player"),
     HELP_GIVEALL("message.help.giveall",
-            "&7/points giveall <points> &6: Generate points for online players"),
+                 "&7/points giveall <points> &6: Generate points for online players"),
     HELP_TAKE("message.help.take",
-            "&7/points take <name> <points> &6: Take points from player"),
+              "&7/points take <name> <points> &6: Take points from player"),
     HELP_LOOK("message.help.look",
-            "&7/points look <name> &6: Lookup player's points"),
+              "&7/points look <name> &6: Lookup player's points"),
     HELP_SET("message.help.set",
-            "&7/points set <name> <points> &6: Set player's points to amount"),
+             "&7/points set <name> <points> &6: Set player's points to amount"),
     HELP_RESET("message.help.reset",
-            "&7/points reset <name> &6: Reset player's points to 0"),
+               "&7/points reset <name> &6: Reset player's points to 0"),
     HELP_PAY("message.help.pay",
-            "&7/points pay <name> <points> &6: Send points to given player"),
+             "&7/points pay <name> <points> &6: Send points to given player"),
     HELP_LEAD("message.help.lead",
-            "&7/points lead [prev/next/page] &6: Leader board"),
+              "&7/points lead [prev/next/page] &6: Leader board"),
     HELP_BROADCAST("message.help.broadcast",
-            "&7/points broadcast <name> &6: Broadcast player's points"),
+                   "&7/points broadcast <name> &6: Broadcast player's points"),
     HELP_RELOAD("message.help.reload", "&7/points reload &6: Reload config");
 
     /**
      * Path and default value.
      */
-    private String path, def;
+    private final String path;
+    private final String def;
 
     /**
      * Private constructor.
-     * 
-     * @param path
-     *            - Path in config.
-     * @param def
-     *            - Default value to use.
+     *
+     * @param path - Path in config.
+     * @param def  - Default value to use.
      */
-    private LocalizeNode(String path, String def) {
+    LocalizeNode(final String path, final String def) {
         this.path = path;
-        this.def = def;
+        this.def  = def;
     }
 
     /**

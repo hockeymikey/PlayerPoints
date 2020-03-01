@@ -1,26 +1,26 @@
 package org.black_ixx.playerpoints.update;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.version.Version;
-import org.black_ixx.playerpoints.update.modules.TwoZeroZeroUpdate;
 import org.black_ixx.playerpoints.update.modules.OneFiveTwoUpdate;
 import org.black_ixx.playerpoints.update.modules.OneFiveUpdate;
+import org.black_ixx.playerpoints.update.modules.TwoZeroZeroUpdate;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class UpdateManager {
 
     /**
      * Plugin instance.
      */
-    private PlayerPoints plugin;
+    private final PlayerPoints plugin;
 
     /**
      * Update modules.
      */
-    private final SortedSet<UpdateModule> modules = new TreeSet<UpdateModule>();
+    private final SortedSet<UpdateModule> modules = new TreeSet<>();
 
     /**
      * Constructor.
@@ -47,7 +47,7 @@ public class UpdateManager {
         if(!version.validate()) {
             version.setIgnorePatch(true);
         }
-        Version current = new Version(config.getString("version"));
+        final Version current = new Version(config.getString("version"));
         if(!current.validate()) {
             current.setIgnorePatch(true);
         }
@@ -64,13 +64,11 @@ public class UpdateManager {
      */
     private void update(final Version current) {
         // Run through update modules.
-        for(UpdateModule module : modules) {
-            if(module.shouldApplyUpdate(current)) {
-                plugin.getLogger().info(
-                        "Applying update for " + module.getTargetVersion());
-                module.update();
-            }
-        }
+        modules.stream().filter(module -> module.shouldApplyUpdate(current)).forEach(module -> {
+            plugin.getLogger().info(
+                    "Applying update for " + module.getTargetVersion());
+            module.update();
+        });
 
         // Update version number in config.yml
         plugin.getConfig().set("version", plugin.getDescription().getVersion());

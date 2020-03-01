@@ -2,13 +2,17 @@ package org.black_ixx.playerpoints.services.version;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.regex.Pattern;
+
 /**
  * Represents a semantic version.
- * 
+ *
  * @author Mitsugaru
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Version implements Comparable<Version> {
 
+    private static final Pattern COMPILE = Pattern.compile("\\s");
     /**
      * Raw version as string.
      */
@@ -23,7 +27,7 @@ public class Version implements Comparable<Version> {
      * Whether we should ignore the patch number, allowing for valid versions
      * with only two values.
      */
-    private boolean ignorePatch = false;
+    private boolean ignorePatch;
 
     /**
      * Constructor.
@@ -32,7 +36,7 @@ public class Version implements Comparable<Version> {
      *            - Raw version number as string.
      */
     public Version(final String version) {
-        this.version = version.replaceAll("\\s", "");
+        this.version = COMPILE.matcher(version).replaceAll("");
     }
 
     /**
@@ -59,7 +63,7 @@ public class Version implements Comparable<Version> {
      * @return Minor number.
      */
     public int getMinor() {
-        int first = version.indexOf(SEPARATOR);
+        final int first = version.indexOf(SEPARATOR);
         int second = version.indexOf(SEPARATOR, first + 1);
         if(ignorePatch) {
             second = version.length();
@@ -79,7 +83,7 @@ public class Version implements Comparable<Version> {
         if(ignorePatch) {
             return 0;
         }
-        int first = version.indexOf(SEPARATOR, version.indexOf(SEPARATOR) + 1) + 1;
+        final int first = version.indexOf(SEPARATOR, version.indexOf(SEPARATOR) + 1) + 1;
         int second = version.length();
         if(getLastSeparatorIndex() > 0) {
             second = getLastSeparatorIndex();
@@ -95,13 +99,13 @@ public class Version implements Comparable<Version> {
      */
     private int getLastSeparatorIndex() {
         int last = -1;
-        PreReleaseType type = getType();
+        final PreReleaseType type = getType();
         if(!type.equals(PreReleaseType.NONE)) {
-            last = version.indexOf("-");
+            last = version.indexOf('-');
         } else {
-            Metadata meta = getMetadata();
+            final Metadata meta = getMetadata();
             if(!meta.equals(Metadata.NONE)) {
-                last = version.indexOf("+");
+                last = version.indexOf('+');
             }
         }
         return last;
@@ -113,15 +117,16 @@ public class Version implements Comparable<Version> {
      * @return Version type flag.
      */
     public PreReleaseType getType() {
-        int first = version.indexOf("-");
+        final int first = version.indexOf('-');
         int second = version.length();
         if(version.contains("+")) {
-            second = version.indexOf("+");
+            second = version.indexOf('+');
         }
         if(first >= 0) {
             try {
                 return new PreReleaseType(version.substring(first + 1, second));
-            } catch(IndexOutOfBoundsException e) {
+            }
+            catch (final IndexOutOfBoundsException ignored) {
 
             }
         }
@@ -134,12 +139,13 @@ public class Version implements Comparable<Version> {
      * @return Metadata.
      */
     public Metadata getMetadata() {
-        int first = version.indexOf("+");
+        final int first = version.indexOf('+');
         if(first >= 0) {
             try {
-                return new Metadata(version.substring(first + 1,
-                        version.length()));
-            } catch(IndexOutOfBoundsException e) {
+                return new Metadata(version.substring(first + 1
+                ));
+            }
+            catch (final IndexOutOfBoundsException ignored) {
 
             }
         }
@@ -157,11 +163,10 @@ public class Version implements Comparable<Version> {
 
     /**
      * Set the ignore patch flag for this version.
-     * 
-     * @param ignorePatch
-     *            - Ignore flag.
+     *
+     * @param ignorePatch - Ignore flag.
      */
-    public void setIgnorePatch(boolean ignorePatch) {
+    public void setIgnorePatch(final boolean ignorePatch) {
         this.ignorePatch = ignorePatch;
     }
 
@@ -170,23 +175,24 @@ public class Version implements Comparable<Version> {
      * 
      * @return True if valid, else false.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean validate() {
-        boolean valid = false;
+        boolean valid;
         try {
             getMajor();
             getMinor();
             getPatch();
-            if(ignorePatch) {
+            if (ignorePatch) {
                 valid = StringUtils.countMatches(version, SEPARATOR) >= 1;
-            } else {
+            }
+            else {
                 valid = StringUtils.countMatches(version, SEPARATOR) >= 2;
             }
             valid = valid && StringUtils.countMatches(version, "-") <= 1;
             valid = valid && StringUtils.countMatches(version, "+") <= 1;
-        } catch(IndexOutOfBoundsException e) {
-        	valid = false;
-        } catch(NumberFormatException e) {
-        	valid = false;
+        }
+        catch (final IndexOutOfBoundsException | NumberFormatException e) {
+            valid = false;
         }
         return valid;
     }
@@ -194,15 +200,15 @@ public class Version implements Comparable<Version> {
     /**
      * Attempts to parse the given string for an integer. Will guarantee a
      * non-negative number.
-     * 
+     *
      * @param in
      *            - String to parse.
      * @return Non-negative number. Returns 0 if there was an issue parsing the
      *         number.
      */
-    private int parseNumber(String in) {
-        int number = Integer.parseInt(in);
-        if(number < 0) {
+    private int parseNumber(final String in) {
+        final int number = Integer.parseInt(in);
+        if (number < 0) {
             throw new NumberFormatException(
                     "No negative numbers in a version string.");
         }
@@ -210,14 +216,17 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
-    public int compareTo(Version o) {
-        if(getMajor() != o.getMajor()) {
+    public int compareTo(final Version o) {
+        if (getMajor() != o.getMajor()) {
             return getMajor() - o.getMajor();
-        } else if(getMinor() != o.getMinor()) {
+        }
+        else if (getMinor() != o.getMinor()) {
             return getMinor() - o.getMinor();
-        } else if(getPatch() != o.getPatch()) {
+        }
+        else if (getPatch() != o.getPatch()) {
             return getPatch() - o.getPatch();
-        } else if(getType() != o.getType()) {
+        }
+        else if (getType() != o.getType()) {
             return o.getType().compareTo(getType());
         }
         return 0;
@@ -229,9 +238,9 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof Version) {
-            return version.equals(((Version) obj).getVersion());
+    public boolean equals(final Object obj) {
+        if (obj instanceof Version) {
+            return version.equals(((Version) obj).version);
         }
         return false;
     }

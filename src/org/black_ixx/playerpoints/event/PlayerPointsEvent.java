@@ -1,11 +1,12 @@
 package org.black_ixx.playerpoints.event;
 
-import java.util.UUID;
-
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import java.util.UUID;
+
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class PlayerPointsEvent extends Event implements Cancellable {
     /**
      * Handler list.
@@ -28,20 +29,27 @@ public class PlayerPointsEvent extends Event implements Cancellable {
 
     /**
      * Constructor.
-     * 
-     * @param id
-     *            - Id of player.
-     * @param change
-     *            - Amount of change that will apply to their current balance.
+     *
+     * @param id     - Id of player.
+     * @param change - Amount of change that will apply to their current balance.
      */
-    public PlayerPointsEvent(UUID id, int change) {
+    public PlayerPointsEvent(final UUID id, final int change) {
         this.playerId = id;
-        this.change = change;
+        this.change   = change;
+    }
+
+    /**
+     * Static method to get HandlerList.
+     *
+     * @return HandlerList.
+     */
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     /**
      * Get the amount of points that the player's balance will change by.
-     * 
+     *
      * @return Amount of change.
      */
     public int getChange() {
@@ -51,21 +59,11 @@ public class PlayerPointsEvent extends Event implements Cancellable {
     /**
      * Set the amount of change that will be used to adjust the player's
      * balance.
-     * 
-     * @param change
-     *            - Amount of change.
+     *
+     * @param change - Amount of change.
      */
-    public void setChange(int change) {
+    public void setChange(final int change) {
         this.change = change;
-    }
-
-    /**
-     * Get the player id.
-     * 
-     * @return Player UUID.
-     */
-    public UUID getPlayerId() {
-        return playerId;
     }
 
     @Override
@@ -73,18 +71,18 @@ public class PlayerPointsEvent extends Event implements Cancellable {
         return cancelled;
     }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    /**
+     * Get the player id.
+     *
+     * @return Player UUID.
+     */
+    public UUID getPlayerId() {
+        return playerId;
     }
 
-    /**
-     * Static method to get HandlerList.
-     * 
-     * @return HandlerList.
-     */
-    public static HandlerList getHandlerList() {
-        return handlers;
+    @Override
+    public void setCancelled(final boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     @Override

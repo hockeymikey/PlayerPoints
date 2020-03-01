@@ -1,25 +1,26 @@
 package org.black_ixx.playerpoints.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.IModule;
 import org.black_ixx.playerpoints.storage.StorageType;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Handler for the root plugin config.yml file.
  * 
  * @author Mitsugaru
  */
+@SuppressWarnings("WeakerAccess")
 public class RootConfig implements IModule {
 
     /**
      * Plugin instance.
      */
-    private PlayerPoints plugin;
+    private final PlayerPoints plugin;
     /**
      * Database info.
      */
@@ -40,11 +41,10 @@ public class RootConfig implements IModule {
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public RootConfig(PlayerPoints plugin) {
+    public RootConfig(final PlayerPoints plugin) {
         this.plugin = plugin;
     }
 
@@ -62,64 +62,70 @@ public class RootConfig implements IModule {
 
     /**
      * Load the settings from config.
-     * 
-     * @param config
-     *            - Config to read from.
+     *
+     * @param config - Config to read from.
      */
-    private void loadSettings(ConfigurationSection config) {
-        debugDatabase = config.getBoolean("debug.database", false);
-        debugUUID = config.getBoolean("debug.uuid", false);
-        voteEnabled = config.getBoolean("vote.enabled", false);
-        voteAmount = config.getInt("vote.amount", 100);
-        voteOnline = config.getBoolean("vote.online", false);
-        vault = config.getBoolean("vault", false);
-        hasPlayedBefore = config.getBoolean("restrictions.hasPlayedBefore",
-                false);
+    private void loadSettings(final ConfigurationSection config) {
+        debugDatabase      = config.getBoolean("debug.database", false);
+        debugUUID          = config.getBoolean("debug.uuid", false);
+        voteEnabled        = config.getBoolean("vote.enabled", false);
+        voteAmount         = config.getInt("vote.amount", 100);
+        voteOnline         = config.getBoolean("vote.online", false);
+        vault              = config.getBoolean("vault", false);
+        hasPlayedBefore    = config.getBoolean("restrictions.hasPlayedBefore",
+                                               false);
         autocompleteOnline = config.getBoolean("restrictions.autocompleteOnline", false);
     }
 
     /**
      * Load storage settings only on plugin enable / disable.
-     * 
+     *
      * @param config
      *            - Config to read from.
      */
-    private void loadStorageSettings(ConfigurationSection config) {
-        /**
+    private void loadStorageSettings(final ConfigurationSection config) {
+        /*
          * Storage
          */
         final String back = config.getString("storage");
-        if(back.equalsIgnoreCase("sqlite")) {
+        assert back != null;
+        if (back.equalsIgnoreCase("sqlite")) {
             backend = StorageType.SQLITE;
-        } else if(back.equalsIgnoreCase("mysql")) {
+        }
+        else if (back.equalsIgnoreCase("mysql")) {
             backend = StorageType.MYSQL;
-        } else {
+        }
+        else {
             backend = StorageType.YAML;
         }
-        /**
+        /*
          * SQL info
          */
-        host = config.getString("mysql.host", "localhost");
-        port = config.getString("mysql.port", "3306");
-        database = config.getString("mysql.database", "minecraft");
-        user = config.getString("mysql.user", "user");
-        password = config.getString("mysql.password", "password");
-        table = config.getString("mysql.table", "playerpoints");
-        importSQL = config.getBoolean("mysql.import.use", false);
+        host       = config.getString("mysql.host", "localhost");
+        port       = config.getString("mysql.port", "3306");
+        database   = config.getString("mysql.database", "minecraft");
+        user       = config.getString("mysql.user", "user");
+        password   = config.getString("mysql.password", "password");
+        table      = config.getString("mysql.table", "playerpoints");
+        importSQL  = config.getBoolean("mysql.import.use", false);
         retryLimit = config.getInt("mysql.retry", 10);
-        exportSQL = config.getBoolean("mysql.export.use", false);
+        exportSQL  = config.getBoolean("mysql.export.use", false);
         final String databaseImportSource = config.getString(
                 "mysql.import.source", "YAML");
-        if(databaseImportSource.equalsIgnoreCase("SQLITE")) {
+        assert databaseImportSource != null;
+        if (databaseImportSource.equalsIgnoreCase("SQLITE")) {
             importSource = StorageType.SQLITE;
-        } else {
+        }
+        else {
             importSource = StorageType.YAML;
         }
         final String databaseExportSource = config.getString(
                 "mysql.export.source", "MYSQL");
-        if(databaseExportSource.equalsIgnoreCase("SQLITE")) {
+        assert databaseExportSource != null;
+        if (databaseExportSource.equalsIgnoreCase("SQLITE")) {
             exportSource = StorageType.SQLITE;
-        } else {
+        }
+        else {
             exportSource = StorageType.MYSQL;
         }
     }
@@ -138,7 +144,7 @@ public class RootConfig implements IModule {
      // Grab config
         final ConfigurationSection config = plugin.getConfig();
         // LinkedHashmap of defaults
-        final Map<String, Object> defaults = new LinkedHashMap<String, Object>();
+        final Map<String, Object> defaults = new LinkedHashMap<>();
         defaults.put("storage", "YAML");
         defaults.put("mysql.host", "localhost");
         defaults.put("mysql.port", 3306);
@@ -174,6 +180,5 @@ public class RootConfig implements IModule {
     }
 
     @Override
-    public void closing() {
-    }
+    public void closing() { }
 }

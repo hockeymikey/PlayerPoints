@@ -1,17 +1,16 @@
 package org.black_ixx.playerpoints.storage.models;
 
+import lib.PatPeter.SQLibrary.MySQL;
+import org.black_ixx.playerpoints.PlayerPoints;
+import org.black_ixx.playerpoints.config.RootConfig;
+import org.black_ixx.playerpoints.storage.DatabaseStorage;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Level;
-
-import lib.PatPeter.SQLibrary.MySQL;
-
-import org.black_ixx.playerpoints.PlayerPoints;
-import org.black_ixx.playerpoints.config.RootConfig;
-import org.black_ixx.playerpoints.storage.DatabaseStorage;
 
 /**
  * Storage handler for MySQL source.
@@ -27,31 +26,30 @@ public class MySQLStorage extends DatabaseStorage {
     /**
      * Number of attempts to reconnect before completely failing an operation.
      */
-    private int retryLimit = 10;
+    private final int retryLimit;
     /**
      * The table name to use.
      */
-    private String tableName;
+    private final String tableName;
     /**
      * Current retry count.
      */
-    private int retryCount = 0;
+    private int retryCount;
     /**
      * Skip operation flag.
      */
-    private boolean skip = false;
+    private boolean skip;
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public MySQLStorage(PlayerPoints plugin) {
+    public MySQLStorage(final PlayerPoints plugin) {
         super(plugin);
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("Constructor");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.debugDatabase) {
+            plugin.getLogger().info("Constructor");
         }
         retryLimit = config.retryLimit;
         //setup table name and strings
@@ -59,23 +57,23 @@ public class MySQLStorage extends DatabaseStorage {
         SetupQueries(tableName);
         //Connect
         connect();
-        if(!mysql.isTable(tableName)) {
+        if (!mysql.isTable(tableName)) {
             build();
         }
     }
 
     @Override
-    public int getPoints(String id) {
+    public int getPoints(final String id) {
         int points = 0;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(id == null || id.equals("")) {
-            if(config.debugDatabase) {
-            	plugin.getLogger().info("getPoints() - bad ID");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (id == null || id.isEmpty()) {
+            if (config.debugDatabase) {
+                plugin.getLogger().info("getPoints() - bad ID");
             }
             return points;
         }
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("getPoints(" + id + ")");
+        if (config.debugDatabase) {
+            plugin.getLogger().info("getPoints(" + id + ")");
         }
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -83,18 +81,20 @@ public class MySQLStorage extends DatabaseStorage {
             statement = mysql.prepare(GET_POINTS);
             statement.setString(1, id);
             result = mysql.query(statement);
-            if(result != null && result.next()) {
+            if (result != null && result.next()) {
                 points = result.getInt("points");
             }
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create getter statement.", e);
+                                   "Could not create getter statement.", e);
             retryCount++;
             connect();
-            if(!skip) {
+            if (!skip) {
                 points = getPoints(id);
             }
-        } finally {
+        }
+        finally {
             cleanup(result, statement);
         }
         retryCount = 0;
@@ -105,40 +105,43 @@ public class MySQLStorage extends DatabaseStorage {
     }
 
     @Override
-    public boolean setPoints(String id, int points) {
+    public boolean setPoints(final String id, final int points) {
         boolean value = false;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(id == null || id.equals("")) {
-            if(config.debugDatabase) {
-            	plugin.getLogger().info("setPoints() - bad ID");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (id == null || id.isEmpty()) {
+            if (config.debugDatabase) {
+                plugin.getLogger().info("setPoints() - bad ID");
             }
-            return value;
+            return false;
         }
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("setPoints(" + id + "," + points + ")");
+        if (config.debugDatabase) {
+            plugin.getLogger().info("setPoints(" + id + "," + points + ")");
         }
         final boolean exists = playerEntryExists(id);
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
-            if(exists) {
+            if (exists) {
                 statement = mysql.prepare(UPDATE_PLAYER);
-            } else {
+            }
+            else {
                 statement = mysql.prepare(INSERT_PLAYER);
             }
             statement.setInt(1, points);
             statement.setString(2, id);
             result = mysql.query(statement);
-            value = true;
-        } catch(SQLException e) {
+            value  = true;
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create setter statement.", e);
+                                   "Could not create setter statement.", e);
             retryCount++;
             connect();
-            if(!skip) {
+            if (!skip) {
                 value = setPoints(id, points);
             }
-        } finally {
+        }
+        finally {
             cleanup(result, statement);
         }
         retryCount = 0;
@@ -149,17 +152,17 @@ public class MySQLStorage extends DatabaseStorage {
     }
 
     @Override
-    public boolean playerEntryExists(String id) {
+    public boolean playerEntryExists(final String id) {
         boolean has = false;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(id == null || id.equals("")) {
-            if(config.debugDatabase) {
-            	plugin.getLogger().info("playerEntryExists() - bad ID");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (id == null || id.isEmpty()) {
+            if (config.debugDatabase) {
+                plugin.getLogger().info("playerEntryExists() - bad ID");
             }
-            return has;
+            return false;
         }
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("playerEntryExists("+ id + ")");
+        if (config.debugDatabase) {
+            plugin.getLogger().info("playerEntryExists(" + id + ")");
         }
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -167,18 +170,20 @@ public class MySQLStorage extends DatabaseStorage {
             statement = mysql.prepare(GET_POINTS);
             statement.setString(1, id);
             result = mysql.query(statement);
-            if(result.next()) {
+            if (result.next()) {
                 has = true;
             }
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create player check statement.", e);
+                                   "Could not create player check statement.", e);
             retryCount++;
             connect();
-            if(!skip) {
+            if (!skip) {
                 has = playerEntryExists(id);
             }
-        } finally {
+        }
+        finally {
             cleanup(result, statement);
         }
         retryCount = 0;
@@ -187,33 +192,35 @@ public class MySQLStorage extends DatabaseStorage {
         }
         return has;
     }
-    
+
     @Override
-    public boolean removePlayer(String id) {
+    public boolean removePlayer(final String id) {
         boolean deleted = false;
-        if(id == null || id.equals("")) {
-            return deleted;
+        if (id == null || id.isEmpty()) {
+            return false;
         }
         PreparedStatement statement = null;
         ResultSet result = null;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("removePlayers(" + id + ")");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.debugDatabase) {
+            plugin.getLogger().info("removePlayers(" + id + ")");
         }
         try {
             statement = mysql.prepare(REMOVE_PLAYER);
             statement.setString(1, id);
-            result = mysql.query(statement);
+            result  = mysql.query(statement);
             deleted = true;
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create player remove statement.", e);
+                                   "Could not create player remove statement.", e);
             retryCount++;
             connect();
-            if(!skip) {
+            if (!skip) {
                 deleted = playerEntryExists(id);
             }
-        } finally {
+        }
+        finally {
             cleanup(result, statement);
         }
         retryCount = 0;
@@ -225,34 +232,36 @@ public class MySQLStorage extends DatabaseStorage {
 
     @Override
     public Collection<String> getPlayers() {
-        Collection<String> players = new HashSet<String>();
+        final Collection<String> players = new HashSet<>();
 
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("Attempting getPlayers()");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.debugDatabase) {
+            plugin.getLogger().info("Attempting getPlayers()");
         }
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
             statement = mysql.prepare(GET_PLAYERS);
-            result = mysql.query(statement);
+            result    = mysql.query(statement);
 
-            while(result.next()) {
-                String name = result.getString("playername");
-                if(name != null) {
+            while (result.next()) {
+                final String name = result.getString("playername");
+                if (name != null) {
                     players.add(name);
                 }
             }
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create get players statement.", e);
+                                   "Could not create get players statement.", e);
             retryCount++;
             connect();
-            if(!skip) {
+            if (!skip) {
                 players.clear();
                 players.addAll(getPlayers());
             }
-        } finally {
+        }
+        finally {
             cleanup(result, statement);
         }
         retryCount = 0;
@@ -266,22 +275,23 @@ public class MySQLStorage extends DatabaseStorage {
      * Connect to MySQL database. Close existing connection if one exists.
      */
     private void connect() {
-    	RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(mysql != null) {
-        	if(config.debugDatabase) {
-        		plugin.getLogger().info("Closing existing MySQL connection");
-        	}
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (mysql != null) {
+            if (config.debugDatabase) {
+                plugin.getLogger().info("Closing existing MySQL connection");
+            }
             mysql.close();
         }
         mysql = new MySQL(plugin.getLogger(), " ", config.host,
-                Integer.valueOf(config.port), config.database, config.user,
-                config.password);
-        if(config.debugDatabase) {
-    		plugin.getLogger().info("Attempting MySQL connection to " + config.user + "@" + config.host + ":" + config.port + "/" + config.database);
-    	}
-        if(retryCount < retryLimit) {
+                          Integer.parseInt(config.port), config.database, config.user,
+                          config.password);
+        if (config.debugDatabase) {
+            plugin.getLogger().info("Attempting MySQL connection to " + config.user + "@" + config.host + ":" + config.port + "/" + config.database);
+        }
+        if (retryCount < retryLimit) {
             mysql.open();
-        } else {
+        }
+        else {
             plugin.getLogger().severe(
                     "Tried connecting to MySQL " + retryLimit
                             + " times and could not connect.");
@@ -295,16 +305,17 @@ public class MySQLStorage extends DatabaseStorage {
     @Override
     public boolean destroy() {
         boolean success = false;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.debugDatabase) {
-        	plugin.getLogger().info("Dropping playerpoints table");
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.debugDatabase) {
+            plugin.getLogger().info("Dropping playerpoints table");
         }
         try {
             mysql.query(String.format("DROP TABLE %s;", tableName));
             success = true;
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not drop MySQL table.", e);
+                                   "Could not drop MySQL table.", e);
         }
         return success;
     }
@@ -312,16 +323,17 @@ public class MySQLStorage extends DatabaseStorage {
     @Override
     public boolean build() {
         boolean success = false;
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.debugDatabase) {
-        	plugin.getLogger().info(String.format("Creating %s table", tableName));
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.debugDatabase) {
+            plugin.getLogger().info(String.format("Creating %s table", tableName));
         }
         try {
             mysql.query(String.format("CREATE TABLE %s (id INT UNSIGNED NOT NULL AUTO_INCREMENT, playername varchar(36) NOT NULL, points INT NOT NULL, PRIMARY KEY(id), UNIQUE(playername));", tableName));
             success = true;
-        } catch(SQLException e) {
+        }
+        catch (final SQLException e) {
             plugin.getLogger().log(Level.SEVERE,
-                    "Could not create MySQL table.", e);
+                                   "Could not create MySQL table.", e);
         }
         return success;
     }

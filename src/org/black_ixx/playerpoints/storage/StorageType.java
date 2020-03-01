@@ -6,5 +6,5 @@ package org.black_ixx.playerpoints.storage;
 public enum StorageType {
     SQLITE,
     MYSQL,
-    YAML;
+    YAML
 }

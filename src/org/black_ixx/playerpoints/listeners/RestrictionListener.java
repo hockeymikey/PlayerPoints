@@ -9,19 +9,19 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class RestrictionListener implements Listener {
-    
-    private PlayerPoints plugin;
-    
-    public RestrictionListener(PlayerPoints plugin) {
+
+    private final PlayerPoints plugin;
+
+    public RestrictionListener(final PlayerPoints plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void validatePlayerChangeEvent(PlayerPointsChangeEvent event) {
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.hasPlayedBefore) {
-            Player player = plugin.getServer().getPlayer(event.getPlayerId());
-            if(player != null) {
+    public void validatePlayerChangeEvent(final PlayerPointsChangeEvent event) {
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.hasPlayedBefore) {
+            final Player player = plugin.getServer().getPlayer(event.getPlayerId());
+            if (player != null) {
                 event.setCancelled(!player.hasPlayedBefore());
             }
         }

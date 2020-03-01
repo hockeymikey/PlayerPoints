@@ -14,15 +14,14 @@ public class Exporter {
     /**
      * Plugin instance.
      */
-    private PlayerPoints plugin;
+    private final PlayerPoints plugin;
 
     /**
      * Contructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public Exporter(PlayerPoints plugin) {
+    public Exporter(final PlayerPoints plugin) {
         this.plugin = plugin;
     }
 
@@ -30,8 +29,8 @@ public class Exporter {
      * Check whether we need to import and where we are importing from.
      */
     public void checkExport() {
-        RootConfig config = plugin.getModuleForClass(RootConfig.class);
-        if(config.exportSQL) {
+        final RootConfig config = plugin.getModuleForClass(RootConfig.class);
+        if (config.exportSQL) {
             exportSQL(config.exportSource);
             plugin.getConfig().set("mysql.export.use", false);
             plugin.saveConfig();
@@ -40,21 +39,20 @@ public class Exporter {
 
     /**
      * Imports from SQLite / YAML to MYSQL.
-     * 
-     * @param source
-     *            - Type of storage to read from.
+     *
+     * @param source - Type of storage to read from.
      */
-    private void exportSQL(StorageType source) {
-        switch(source) {
-        case MYSQL:
-            MySQLExport mysql = new MySQLExport(plugin);
-            mysql.doExport();
-            break;
-        case SQLITE:
-            SQLiteExport sqlite = new SQLiteExport(plugin);
-            sqlite.doExport();
-        default:
-            break;
+    private void exportSQL(final StorageType source) {
+        switch (source) {
+            case MYSQL:
+                final MySQLExport mysql = new MySQLExport(plugin);
+                mysql.doExport();
+                break;
+            case SQLITE:
+                final SQLiteExport sqlite = new SQLiteExport(plugin);
+                sqlite.doExport();
+            default:
+                break;
         }
     }
 }

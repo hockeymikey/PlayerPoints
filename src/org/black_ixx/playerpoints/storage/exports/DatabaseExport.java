@@ -8,6 +8,7 @@ import org.black_ixx.playerpoints.storage.StorageGenerator;
  * 
  * @author Mitsugaru
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class DatabaseExport {
     /**
      * Plugin instance.
@@ -21,13 +22,12 @@ public abstract class DatabaseExport {
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public DatabaseExport(PlayerPoints plugin) {
+    public DatabaseExport(final PlayerPoints plugin) {
         this.plugin = plugin;
-        generator = new StorageGenerator(plugin);
+        generator   = new StorageGenerator(plugin);
     }
 
     /**
