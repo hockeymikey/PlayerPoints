@@ -38,6 +38,10 @@
 			<id>dakani-repo</id>
 			<url>${dakani.repo}/public</url>
 		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 	<!-- Distribution management -->
 	<distributionManagement>
