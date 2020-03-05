@@ -69,14 +69,21 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.github.JavaFactoryDev</groupId>
+			<artifactId>LightningStorage</artifactId>
+			<version>3.0.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>lib.PatPeter.SQLibrary</groupId>
 			<artifactId>SQLibrary</artifactId>
 			<version>7.1</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	<!-- Build. -->
 	<build>
-		<defaultGoal>compile package</defaultGoal>
+		<defaultGoal>clean package</defaultGoal>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>${basedir}/src/</sourceDirectory>
 		<resources>
@@ -97,6 +104,33 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<minimizeJar>true</minimizeJar>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<relocations>
+						<relocation>
+							<pattern>de.leonhard.storage</pattern>
+							<shadedPattern>org.black_ixx.playerpoints.storage</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>lib.PatPeter.SQLibrary</pattern>
+							<shadedPattern>org.black_ixx.playerpoints.lib</shadedPattern>
+						</relocation>
+					</relocations>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -25,15 +25,17 @@ public class RootConfig implements IModule {
      * Database info.
      */
     public String host, port, database, user, password, table;
-    /**
-     * Vote amount and MySQL retry limit.
-     */
-    public int voteAmount, retryLimit;
+    public int retryLimit;
     /**
      * Import / export sql, vault and vote options.
      */
-    public boolean importSQL, exportSQL, voteOnline, voteEnabled, vault,
-            hasPlayedBefore, autocompleteOnline, debugDatabase, debugUUID;
+    public boolean importSQL;
+    public boolean exportSQL;
+    public boolean vault;
+    public boolean hasPlayedBefore;
+    public boolean autocompleteOnline;
+    public boolean debugDatabase;
+    public boolean debugUUID;
     /**
      * Storage info.
      */
@@ -68,9 +70,6 @@ public class RootConfig implements IModule {
     private void loadSettings(final ConfigurationSection config) {
         debugDatabase      = config.getBoolean("debug.database", false);
         debugUUID          = config.getBoolean("debug.uuid", false);
-        voteEnabled        = config.getBoolean("vote.enabled", false);
-        voteAmount         = config.getInt("vote.amount", 100);
-        voteOnline         = config.getBoolean("vote.online", false);
         vault              = config.getBoolean("vault", false);
         hasPlayedBefore    = config.getBoolean("restrictions.hasPlayedBefore",
                                                false);
@@ -95,9 +94,11 @@ public class RootConfig implements IModule {
         else if (back.equalsIgnoreCase("mysql")) {
             backend = StorageType.MYSQL;
         }
-        else {
+        else if (back.equalsIgnoreCase("yaml")) {
             backend = StorageType.YAML;
         }
+        else
+            backend = StorageType.JSON;
         /*
          * SQL info
          */
@@ -157,9 +158,6 @@ public class RootConfig implements IModule {
         defaults.put("mysql.export.use", false);
         defaults.put("mysql.export.source", "SQLITE");
         defaults.put("mysql.retry", 10);
-        defaults.put("vote.enabled", false);
-        defaults.put("vote.amount", 100);
-        defaults.put("vote.online", false);
         defaults.put("restrictions.autocompleteOnline", false);
         defaults.put("restrictions.hasPlayedBefore", false);
         defaults.put("debug.database", false);

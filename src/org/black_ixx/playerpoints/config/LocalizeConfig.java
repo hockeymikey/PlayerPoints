@@ -1,13 +1,10 @@
 package org.black_ixx.playerpoints.config;
 
+import de.leonhard.storage.Yaml;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.models.Flag;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map.Entry;
@@ -20,19 +17,9 @@ import java.util.Map.Entry;
 public class LocalizeConfig {
 
     /**
-     * Plugin instance.
-     */
-    private static PlayerPoints plugin;
-
-    /**
-     * File reference.
-     */
-    private static File file;
-
-    /**
      * YAML config.
      */
-    private static YamlConfiguration config;
+    private static Yaml config;
 
     /**
      * Map of config keys to values.
@@ -46,34 +33,25 @@ public class LocalizeConfig {
      * @param pp - Plugin instance.
      */
     public static void init(final PlayerPoints pp) {
-        plugin = pp;
-        file   = new File(plugin.getDataFolder().getAbsolutePath()
-                                  + "/localization.yml");
-        config = YamlConfiguration.loadConfiguration(file);
+        /*
+         * Plugin instance.
+         */
+        /*
+         * File reference.
+         */
+        config = new Yaml("localization", pp.getDataFolder().getAbsolutePath());
         loadDefaults();
         loadMessages();
     }
 
     private static void save() {
         // Set config
-        try {
-            // Save the file
-            config.save(file);
-        }
-        catch (final IOException e1) {
-            plugin.getLogger().warning(
-                    "File I/O Exception on saving localization config");
-            e1.printStackTrace();
-        }
+        // Save the file
+        config.forceReload();
     }
 
     public static void reload() {
-        try {
-            config.load(file);
-        }
-        catch (final IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+        config.forceReload();
         MESSAGES.clear();
         loadDefaults();
         loadMessages();
@@ -85,7 +63,7 @@ public class LocalizeConfig {
     }
 
     public static String getString(final String path, final String def) {
-        return config.getString(path, def);
+        return config.getOrDefault(path, def);
     }
 
     private static void loadDefaults() {
@@ -96,7 +74,7 @@ public class LocalizeConfig {
 
     private static void loadMessages() {
         Arrays.stream(LocalizeNode.values()).forEach(node -> MESSAGES.put(node,
-                                                                          config.getString(node.getPath(), node.getDefaultValue())));
+                                                                          config.getOrDefault(node.getPath(), node.getDefaultValue())));
     }
 
     public static String parseString(final LocalizeNode node,

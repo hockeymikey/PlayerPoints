@@ -75,10 +75,6 @@ public class Commander extends CommandHandler {
             sender.sendMessage(LocalizeConfig.parseString(
                     LocalizeNode.HELP_LEAD, info));
         }
-        if(PermissionHandler.has(sender, PermissionNode.BROADCAST)) {
-            sender.sendMessage(LocalizeConfig.parseString(
-                    LocalizeNode.HELP_BROADCAST, info));
-        }
         if(PermissionHandler.has(sender, PermissionNode.SET)) {
             sender.sendMessage(LocalizeConfig.parseString(
                     LocalizeNode.HELP_SET, info));

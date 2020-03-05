@@ -1,6 +1,7 @@
 package org.black_ixx.playerpoints.storage;
 
 import org.black_ixx.playerpoints.PlayerPoints;
+import org.black_ixx.playerpoints.storage.models.JSONStorage;
 import org.black_ixx.playerpoints.storage.models.MySQLStorage;
 import org.black_ixx.playerpoints.storage.models.SQLiteStorage;
 import org.black_ixx.playerpoints.storage.models.YAMLStorage;
@@ -45,6 +46,8 @@ public class StorageGenerator {
             case MYSQL:
                 storage = new MySQLStorage(plugin);
                 break;
+            case JSON:
+                storage = new JSONStorage(plugin);
             default:
                 break;
         }
