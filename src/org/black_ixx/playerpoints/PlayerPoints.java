@@ -1,5 +1,6 @@
 package org.black_ixx.playerpoints;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -201,7 +202,6 @@ public class PlayerPoints extends JavaPlugin {
      * @param name - Player name.
      * @return Player UUID. Null if no match found.
      */
-	@SuppressWarnings("deprecation")
 	public UUID translateNameToUUID(String name) {
         UUID id = null;
         RootConfig config = getModuleForClass(RootConfig.class);
@@ -253,7 +253,7 @@ public class PlayerPoints extends JavaPlugin {
 			}
         } else if(id == null && !Bukkit.getServer().getOnlineMode()) {
             //There's nothing we can do but attempt to get the UUID from old method.
-            id = getServer().getOfflinePlayer(name).getUniqueId();
+            id = UUID.nameUUIDFromBytes((String.format("OfflinePlayer:%s", name)).getBytes(StandardCharsets.UTF_8));
             if(config.debugUUID) {
                 getLogger().info("translateNameToUUID() offline player UUID found: " + ((id == null) ? id : id.toString()));
             }
