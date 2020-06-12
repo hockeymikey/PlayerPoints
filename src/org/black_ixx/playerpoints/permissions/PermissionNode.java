@@ -11,6 +11,7 @@ public enum PermissionNode {
 
     GIVE(".give"),
     GIVEALL(".giveall"),
+    GIVEMULT(".givemult"),
     TAKE(".take"),
     LOOK(".look"),
     PAY(".pay"),
