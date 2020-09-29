@@ -12,20 +12,16 @@ import org.black_ixx.playerpoints.permissions.PermissionNode;
 import org.black_ixx.playerpoints.services.PointsCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-/**
- * Handles the look command.
- * 
- * @author Mitsugaru
- */
-public class LookCommand implements PointsCommand {
+public class BroadcastCommand implements PointsCommand {
 
     @Override
     public boolean execute(PlayerPoints plugin, CommandSender sender,
             Command command, String label, String[] args,
             EnumMap<Flag, String> info) {
-        if(!PermissionHandler.has(sender, PermissionNode.LOOK)) {
-            info.put(Flag.EXTRA, PermissionNode.LOOK.getNode());
+        if(!PermissionHandler.has(sender, PermissionNode.BROADCAST)) {
+            info.put(Flag.EXTRA, PermissionNode.BROADCAST.getNode());
             final String permMessage = LocalizeConfig.parseString(
                     LocalizeNode.PERMISSION_DENY, info);
             if(!permMessage.isEmpty()) {
@@ -34,9 +30,8 @@ public class LookCommand implements PointsCommand {
             return true;
         }
         if(args.length < 1) {
-            // Falsche Argumente
             final String argMessage = LocalizeConfig.parseString(
-                    LocalizeNode.COMMAND_LOOK, info);
+                    LocalizeNode.COMMAND_BROADCAST, info);
             if(!argMessage.isEmpty()) {
                 sender.sendMessage(argMessage);
             }
@@ -51,10 +46,11 @@ public class LookCommand implements PointsCommand {
         }
         info.put(Flag.PLAYER, playerName);
         info.put(Flag.AMOUNT, "" + plugin.getAPI().look(plugin.translateNameToUUID(playerName)));
-        final String senderMessage = LocalizeConfig.parseString(LocalizeNode.POINTS_LOOK,
-                info);
-        if(!senderMessage.isEmpty()) {
-            sender.sendMessage(senderMessage);
+        final String message = LocalizeConfig.parseString(LocalizeNode.BROADCAST, info);
+        if(!message.isEmpty()) {
+            for(Player player : plugin.getServer().getOnlinePlayers()) {
+                player.sendMessage(message);
+            }
         }
         return true;
     }

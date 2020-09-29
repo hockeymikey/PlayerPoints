@@ -10,6 +10,7 @@ package org.black_ixx.playerpoints.permissions;
 public enum PermissionNode {
 
     GIVE(".give"),
+    GIVEALL(".giveall"),
     TAKE(".take"),
     LOOK(".look"),
     PAY(".pay"),
@@ -17,7 +18,8 @@ public enum PermissionNode {
     RESET(".reset"),
     ME(".me"),
     LEAD(".lead"),
-    RELOAD(".reload");
+    RELOAD(".reload"),
+    BROADCAST(".broadcast");
 
     /**
      * Permission prefix.

@@ -14,7 +14,9 @@ public enum LocalizeNode {
             "&7%tag &cLack permission: &b%extra"),
     CONSOLE_DENY("message.noConsole", "&7%tag &cCannot use command as console"),
     NOT_INTEGER("message.notIntenger", "&7%tag &6%extra &cis not an integer"),
-    RELOAD("message.reload", "&7tag &6Configuration reloaded"),
+    RELOAD("message.reload", "&7%tag &6Configuration reloaded"),
+    BROADCAST("message.broadcast",
+            "&7%tag &9Player &a%player &9has &a%amount &9Points"),
     /**
      * Command
      */
@@ -22,6 +24,7 @@ public enum LocalizeNode {
             "&7%tag &cUnknown command '%extra'"),
     COMMAND_GIVE("message.command.give",
             "&7%tag &9/points give <name> <points>"),
+    COMMAND_GIVEALL("message.command.giveall", "&7%tag &9/points giveall <points>"),
     COMMAND_TAKE("message.command.take",
             "&7%tag &9/points take <name> <points>"),
     COMMAND_LOOK("message.command.look", "&7%tag &9/points look <name>"),
@@ -30,12 +33,18 @@ public enum LocalizeNode {
     COMMAND_RESET("message.command.reset", "&7%tag &9/points reset <name>"),
     COMMAND_ME("message.command.me", "&7%tag &9/points me"),
     COMMAND_LEAD("message.command.lead", "&7%tag &9/points lead [next|prev|#]"),
+    COMMAND_BROADCAST("message.command.broadcast",
+            "&7%tag &9/points broadcast <name>"),
     /**
      * Points
      */
     POINTS_SUCCESS("message.points.success",
             "&7%tag &9Player &a%player &9now has &a%amount &9Points"),
+    POINTS_SUCCESS_ALL("message.points.successall",
+            "&7%tag Gave &a%amount &9Points &7to %player players"),
     POINTS_FAIL("message.points.fail", "&7%tag &cTransaction failed"),
+    POINTS_FAIL_ALL("message.points.failall",
+            "&7%tag &cFailed to give &a%amount &9Points &cto %player players"),
     POINTS_LOOK("message.points.look",
             "&7%tag &9Player &a%player &9has &a%amount &9Points"),
     POINTS_PAY_SEND("message.points.pay.send",
@@ -56,6 +65,8 @@ public enum LocalizeNode {
     HELP_ME("message.help.me", "&7/points me &6: Show current points"),
     HELP_GIVE("message.help.give",
             "&7/points give <name> <points> &6: Generate points for given player"),
+    HELP_GIVEALL("message.help.giveall",
+            "&7/points giveall <points> &6: Generate points for online players"),
     HELP_TAKE("message.help.take",
             "&7/points take <name> <points> &6: Take points from player"),
     HELP_LOOK("message.help.look",
@@ -68,6 +79,8 @@ public enum LocalizeNode {
             "&7/points pay <name> <points> &6: Send points to given player"),
     HELP_LEAD("message.help.lead",
             "&7/points lead [prev/next/page] &6: Leader board"),
+    HELP_BROADCAST("message.help.broadcast",
+            "&7/points broadcast <name> &6: Broadcast player's points"),
     HELP_RELOAD("message.help.reload", "&7/points reload &6: Reload config");
 
     /**
