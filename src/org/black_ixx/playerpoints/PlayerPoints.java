@@ -1,5 +1,6 @@
 package org.black_ixx.playerpoints;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,7 +14,6 @@ import org.black_ixx.playerpoints.commands.Commander;
 import org.black_ixx.playerpoints.config.LocalizeConfig;
 import org.black_ixx.playerpoints.config.RootConfig;
 import org.black_ixx.playerpoints.listeners.RestrictionListener;
-import org.black_ixx.playerpoints.listeners.VotifierListener;
 import org.black_ixx.playerpoints.services.ExecutorModule;
 import org.black_ixx.playerpoints.services.IModule;
 import org.black_ixx.playerpoints.storage.StorageHandler;
@@ -22,7 +22,6 @@ import org.black_ixx.playerpoints.storage.imports.Importer;
 import org.black_ixx.playerpoints.update.UpdateManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -79,15 +78,7 @@ public class PlayerPoints extends JavaPlugin {
             getCommand("p").setExecutor(commander);
         }
         final PluginManager pm = getServer().getPluginManager();
-        // Register votifier listener, if applicable
-        if(rootConfig.voteEnabled) {
-            final Plugin votifier = pm.getPlugin("Votifier");
-            if(votifier != null) {
-                pm.registerEvents(new VotifierListener(this), this);
-            } else {
-                getLogger().warning("Could not hook into Votifier!");
-            }
-        }
+
         // Vault module
         if(rootConfig.vault) {
             registerModule(PlayerPointsVaultLayer.class,
@@ -211,7 +202,7 @@ public class PlayerPoints extends JavaPlugin {
      * @param name - Player name.
      * @return Player UUID. Null if no match found.
      */
-    public UUID translateNameToUUID(String name) {
+	public UUID translateNameToUUID(String name) {
         UUID id = null;
         RootConfig config = getModuleForClass(RootConfig.class);
         if(config.debugUUID) {
@@ -262,7 +253,7 @@ public class PlayerPoints extends JavaPlugin {
 			}
         } else if(id == null && !Bukkit.getServer().getOnlineMode()) {
             //There's nothing we can do but attempt to get the UUID from old method.
-            id = Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
+            id = UUID.nameUUIDFromBytes((String.format("OfflinePlayer:%s", name)).getBytes(StandardCharsets.UTF_8));
             if(config.debugUUID) {
                 getLogger().info("translateNameToUUID() offline player UUID found: " + ((id == null) ? id : id.toString()));
             }
