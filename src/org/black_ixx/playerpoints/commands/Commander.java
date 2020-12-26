@@ -31,6 +31,7 @@ public class Commander extends CommandHandler {
         // Register commands.
         registerCommand("give", new GiveCommand());
         registerCommand("giveall", new GiveAllCommand());
+        registerCommand("givemult", new GiveMultCommand());
         registerCommand("take", new TakeCommand());
         registerCommand("look", new LookCommand());
         registerCommand("pay", new PayCommand());
@@ -60,6 +61,10 @@ public class Commander extends CommandHandler {
         if(PermissionHandler.has(sender, PermissionNode.GIVEALL)) {
             sender.sendMessage(LocalizeConfig.parseString(
                     LocalizeNode.HELP_GIVEALL, info));
+        }
+        if(PermissionHandler.has(sender, PermissionNode.GIVEMULT)) {
+            sender.sendMessage(LocalizeConfig.parseString(
+                    LocalizeNode.HELP_GIVEMULT, info));
         }
         if(PermissionHandler.has(sender, PermissionNode.TAKE)) {
             sender.sendMessage(LocalizeConfig.parseString(
