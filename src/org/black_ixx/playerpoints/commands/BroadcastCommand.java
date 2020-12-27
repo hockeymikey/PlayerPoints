@@ -18,8 +18,8 @@ public class BroadcastCommand implements PointsCommand {
 
     @Override
     public boolean execute(PlayerPoints plugin, CommandSender sender,
-            Command command, String label, String[] args,
-            EnumMap<Flag, String> info) {
+                           Command command, String label, String[] args,
+                           EnumMap<Flag, String> info) {
         if(!PermissionHandler.has(sender, PermissionNode.BROADCAST)) {
             info.put(Flag.EXTRA, PermissionNode.BROADCAST.getNode());
             final String permMessage = LocalizeConfig.parseString(

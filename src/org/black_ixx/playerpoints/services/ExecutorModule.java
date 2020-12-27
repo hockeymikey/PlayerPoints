@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
  */
 public class ExecutorModule implements IModule {
 
-    private ExecutorService service = null;
+    private ExecutorService service;
 
     @Override
     public void starting() {
@@ -32,11 +32,12 @@ public class ExecutorModule implements IModule {
         this.service.shutdown();
     }
 
-    public void submit(Runnable task) {
+    public void submit(final Runnable task) {
         this.service.submit(task);
     }
 
-    public <T> Future<T> submit(Callable<T> task) {
+    @SuppressWarnings("unused")
+    public <T> Future<T> submit(final Callable<T> task) {
         return this.service.submit(task);
     }
 }

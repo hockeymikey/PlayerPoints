@@ -14,15 +14,15 @@ public class PermissionHandler {
 
     /**
      * Check if the CommandSender has the specified permission node.
-     * 
-     * @param CommandSender
-     * @param PermissionNode
-     *            to check
+     *
+     * @param sender the command sender
+     * @param node   premission node to check
+     *
      * @return True if sender has permission, else false. If sender is OP, then
-     *         return true always.
+     * return true always.
      */
-    public static boolean has(CommandSender sender, PermissionNode node) {
-        if(sender.isOp()) {
+    public static boolean has(final CommandSender sender, final PermissionNode node) {
+        if (sender.isOp()) {
             // Because sometimes ops might not have permission, even when set to
             // default to op
             return true;

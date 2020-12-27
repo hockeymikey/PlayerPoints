@@ -1,6 +1,7 @@
 package org.black_ixx.playerpoints.services.version;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -8,12 +9,13 @@ import java.util.List;
  * 
  * @author Mitsugaru
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Metadata {
 
     /**
      * Empty metadata set.
      */
-    public static final Metadata NONE = new Metadata("");
+    static final Metadata NONE = new Metadata("");
 
     /**
      * Raw metadata string.
@@ -23,7 +25,7 @@ public class Metadata {
     /**
      * Parsed metadata.
      */
-    private final List<String> metadata = new ArrayList<String>();
+    private final List<String> metadata = new ArrayList<>();
 
     /**
      * Constructor.
@@ -34,16 +36,14 @@ public class Metadata {
     public Metadata(final String meta) {
         this.raw = meta;
 
-        String[] ids = meta.split("\\.");
-        for(int i = 0; i < ids.length; i++) {
-            metadata.add(ids[i]);
-        }
+        final String[] ids = meta.split("\\.");
+        Collections.addAll(metadata, ids);
     }
 
     /**
      * Get the list of metadata.
-     * 
-     * @return
+     *
+     * @return list of metadata
      */
     public List<String> getMetadata() {
         return metadata;

@@ -5,6 +5,7 @@ package org.black_ixx.playerpoints.models;
  * 
  * @author Mitsugaru
  */
+@SuppressWarnings("unused")
 public enum Flag {
     NAME("%name"),
     TAG("%tag"),
@@ -15,15 +16,14 @@ public enum Flag {
     /**
      * Flag field.
      */
-    private String flag;
+    private final String flag;
 
     /**
-     * Private constructor.
-     * 
-     * @param flag
-     *            - Field to use.
+     * Constructor.
+     *
+     * @param flag - Field to use.
      */
-    private Flag(String flag) {
+    Flag(final String flag) {
         this.flag = flag;
     }
 

@@ -1,8 +1,5 @@
 package org.black_ixx.playerpoints.commands;
 
-import java.util.EnumMap;
-import java.util.UUID;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.config.LocalizeConfig;
 import org.black_ixx.playerpoints.config.LocalizeNode;
@@ -16,30 +13,33 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.EnumMap;
+import java.util.UUID;
+
 /**
  * Handles the give command.
- * 
+ *
  * @author Mitsugaru
  */
 public class GiveCommand implements PointsCommand {
 
     @Override
-    public boolean execute(PlayerPoints plugin, CommandSender sender,
-            Command command, String label, String[] args,
-            EnumMap<Flag, String> info) {
-        if(!PermissionHandler.has(sender, PermissionNode.GIVE)) {
+    public boolean execute(final PlayerPoints plugin, final CommandSender sender,
+                           final Command command, final String label, final String[] args,
+                           final EnumMap<Flag, String> info) {
+        if (!PermissionHandler.has(sender, PermissionNode.GIVE)) {
             info.put(Flag.EXTRA, PermissionNode.GIVE.getNode());
             final String permMessage = LocalizeConfig.parseString(
                     LocalizeNode.PERMISSION_DENY, info);
-            if(!permMessage.isEmpty()) {
+            if (!permMessage.isEmpty()) {
                 sender.sendMessage(permMessage);
             }
             return true;
         }
-        if(args.length < 2) {
+        if (args.length < 2) {
             final String argMessage = LocalizeConfig.parseString(
                     LocalizeNode.COMMAND_GIVE, info);
-            if(!argMessage.isEmpty()) {
+            if (!argMessage.isEmpty()) {
                 sender.sendMessage(argMessage);
             }
             return true;
@@ -53,37 +53,39 @@ public class GiveCommand implements PointsCommand {
             if(playerName == null) {
                 playerName = args[0];
             }
-            UUID id = plugin.translateNameToUUID(playerName);
+            final UUID id = plugin.translateNameToUUID(playerName);
             if(plugin.getAPI().give(id, anzahl)) {
                 info.put(Flag.PLAYER, playerName);
-                info.put(Flag.AMOUNT, "" + plugin.getAPI().look(id));
+                info.put(Flag.AMOUNT, String.valueOf(plugin.getAPI().look(id)));
                 final String successMessage = LocalizeConfig.parseString(
                         LocalizeNode.POINTS_SUCCESS, info);
                 if(!successMessage.isEmpty() && sender instanceof Player) {
                     sender.sendMessage(successMessage);
                 }
                 final Player target = Bukkit.getServer().getPlayer(id);
-                if(target != null && target.isOnline()) {
+                if (target != null && target.isOnline()) {
                     info.put(Flag.PLAYER, sender.getName());
-                    info.put(Flag.AMOUNT, "" + anzahl);
+                    info.put(Flag.AMOUNT, String.valueOf(anzahl));
                     final String targetMessage = LocalizeConfig.parseString(
                             LocalizeNode.POINTS_PAY_RECEIVE, info);
-                    if(!targetMessage.isEmpty()) {
+                    if (!targetMessage.isEmpty()) {
                         target.sendMessage(targetMessage);
                     }
                 }
-            } else {
+            }
+            else {
                 final String failMessage = LocalizeConfig.parseString(
                         LocalizeNode.POINTS_FAIL, info);
-                if(!failMessage.isEmpty()) {
+                if (!failMessage.isEmpty()) {
                     sender.sendMessage(failMessage);
                 }
             }
-        } catch(NumberFormatException notnumber) {
+        }
+        catch (final NumberFormatException notnumber) {
             info.put(Flag.EXTRA, args[1]);
             final String errorMessage = LocalizeConfig.parseString(
                     LocalizeNode.NOT_INTEGER, info);
-            if(!errorMessage.isEmpty()) {
+            if (!errorMessage.isEmpty()) {
                 sender.sendMessage(errorMessage);
             }
         }

@@ -1,11 +1,11 @@
 name: PlayerPoints
-description: An additional currency plugin 
+description: An additional currency plugin
 main: org.black_ixx.playerpoints.PlayerPoints
 version: 3.0
 api-version: 1.13
-authors: [Black_ixx, zach_attack]
-website: https://github.com/zachrocks22/PlayerPoints
-softdepend: [SQLibrary, Vault]
+author: Black_ixx
+website: https://github.com/hockeymikey/PlayerPoints
+softdepend: [Votifier, SQLibrary, Vault]
 commands:
   points:
    description: Root command for PlayerPoints

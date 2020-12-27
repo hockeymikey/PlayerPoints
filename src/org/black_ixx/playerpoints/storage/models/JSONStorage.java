@@ -1,6 +1,6 @@
 package org.black_ixx.playerpoints.storage.models;
 
-import de.leonhard.storage.Yaml;
+import de.leonhard.storage.Json;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.ExecutorModule;
 import org.black_ixx.playerpoints.storage.IStorage;
@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -18,50 +17,46 @@ import java.util.logging.Level;
  * @author Mitsugaru
  */
 @SuppressWarnings("unused")
-public class YAMLStorage implements IStorage {
+public class JSONStorage implements IStorage {
 
+    /**
+     * Points section string.
+     */
+    private static final String POINTS_SECTION = "Points.";
     /**
      * Plugin reference.
      */
     private final PlayerPoints plugin;
-
     /**
      * File reference.
      */
     private final File file;
-
     /**
      * Yaml config.
      */
-    private final Yaml config;
-
+    private final Json config;
     /**
      * Task that saves to disk.
      */
     private final SaveTask saveTask;
 
     /**
-     * Points section string.
-     */
-    private static final String POINTS_SECTION = "Points.";
-
-    /**
      * Constructor.
      *
      * @param pp - Player points plugin instance.
      */
-    public YAMLStorage(final PlayerPoints pp) {
+    public JSONStorage(final PlayerPoints pp) {
         plugin   = pp;
         file     = new File(plugin.getDataFolder().getAbsolutePath()
-                                    + "/storage.yml");
-        config   = new Yaml("storage.yml", plugin.getDataFolder().getAbsolutePath());
+                                    + "/storage.json");
+        config   = new Json("storage", plugin.getDataFolder().getAbsolutePath());
         saveTask = new SaveTask();
         save();
     }
 
     /**
      * Save the config data.
-     *
+     * <p>
      * The save action is done in a separate thread to save the server
      * performance.
      */
@@ -104,9 +99,8 @@ public class YAMLStorage implements IStorage {
     @Override
     public Collection<String> getPlayers() {
         Collection<String> players = Collections.emptySet();
-
         if (config.contains("Points")) {
-            players = Objects.requireNonNull(config.keySet("Points"));
+            players = config.keySet("Points");
         }
         return players;
     }
@@ -139,4 +133,5 @@ public class YAMLStorage implements IStorage {
             config.forceReload();
         }
     }
+
 }

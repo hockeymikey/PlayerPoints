@@ -12,6 +12,8 @@ import org.black_ixx.playerpoints.services.CommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.EnumMap;
+
 /**
  * Handles the commands for the root command.
  * 
@@ -21,11 +23,10 @@ public class Commander extends CommandHandler {
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public Commander(PlayerPoints plugin) {
+    public Commander(final PlayerPoints plugin) {
         super(plugin, "points");
 
         // Register commands.
@@ -46,19 +47,19 @@ public class Commander extends CommandHandler {
     }
 
     @Override
-    public boolean noArgs(CommandSender sender, Command command, String label,
-            EnumMap<Flag, String> info) {
+    public boolean noArgs(final CommandSender sender, final Command command, final String label,
+                          final EnumMap<Flag, String> info) {
         sender.sendMessage(LocalizeConfig.parseString(LocalizeNode.HELP_HEADER,
-                info));
-        if(PermissionHandler.has(sender, PermissionNode.ME)) {
+                                                      info));
+        if (PermissionHandler.has(sender, PermissionNode.ME)) {
             sender.sendMessage(LocalizeConfig.parseString(LocalizeNode.HELP_ME,
-                    info));
+                                                          info));
         }
-        if(PermissionHandler.has(sender, PermissionNode.GIVE)) {
+        if (PermissionHandler.has(sender, PermissionNode.GIVE)) {
             sender.sendMessage(LocalizeConfig.parseString(
                     LocalizeNode.HELP_GIVE, info));
         }
-        if(PermissionHandler.has(sender, PermissionNode.GIVEALL)) {
+        if (PermissionHandler.has(sender, PermissionNode.GIVEALL)) {
             sender.sendMessage(LocalizeConfig.parseString(
                     LocalizeNode.HELP_GIVEALL, info));
         }
@@ -102,8 +103,8 @@ public class Commander extends CommandHandler {
     }
 
     @Override
-    public boolean unknownCommand(CommandSender sender, Command command,
-            String label, String[] args, EnumMap<Flag, String> info) {
+    public boolean unknownCommand(final CommandSender sender, final Command command,
+                                  final String label, final String[] args, final EnumMap<Flag, String> info) {
         info.put(Flag.EXTRA, args[0]);
         sender.sendMessage(LocalizeConfig.parseString(
                 LocalizeNode.COMMAND_UNKNOWN, info));

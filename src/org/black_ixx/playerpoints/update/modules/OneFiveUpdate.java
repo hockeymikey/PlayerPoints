@@ -1,26 +1,25 @@
 package org.black_ixx.playerpoints.update.modules;
 
-import java.io.File;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.version.Version;
 import org.black_ixx.playerpoints.update.UpdateModule;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
+
 /**
  * Handles the update to 1.5 from previous versions.
- * 
+ *
  * @author Mitsugaru
  */
 public class OneFiveUpdate extends UpdateModule {
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public OneFiveUpdate(PlayerPoints plugin) {
+    public OneFiveUpdate(final PlayerPoints plugin) {
         super(plugin);
         targetVersion = new Version("1.5");
         targetVersion.setIgnorePatch(true);
@@ -34,17 +33,19 @@ public class OneFiveUpdate extends UpdateModule {
         boolean success = false;
         try {
             success = storage.renameTo(new File(plugin.getDataFolder()
-                    + File.separator + "storage.yml"));
-        } catch(SecurityException sec) {
+                                                        + File.separator + "storage.yml"));
+        }
+        catch (final SecurityException sec) {
             plugin.getLogger().severe(
                     "SecurityExcpetion on renaming config.yml to storage.yml");
             sec.printStackTrace();
-        } catch(NullPointerException npe) {
+        }
+        catch (final NullPointerException npe) {
             plugin.getLogger()
                     .severe("NullPointerException on renaming config.yml to storage.yml");
             npe.printStackTrace();
         }
-        if(success) {
+        if (success) {
             // Set new config with defaults
             plugin.reloadConfig();
             final ConfigurationSection config = plugin.getConfig();

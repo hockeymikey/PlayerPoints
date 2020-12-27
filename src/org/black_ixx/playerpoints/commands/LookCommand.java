@@ -1,7 +1,5 @@
 package org.black_ixx.playerpoints.commands;
 
-import java.util.EnumMap;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.config.LocalizeConfig;
 import org.black_ixx.playerpoints.config.LocalizeNode;
@@ -13,31 +11,33 @@ import org.black_ixx.playerpoints.services.PointsCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.EnumMap;
+
 /**
  * Handles the look command.
- * 
+ *
  * @author Mitsugaru
  */
 public class LookCommand implements PointsCommand {
 
     @Override
-    public boolean execute(PlayerPoints plugin, CommandSender sender,
-            Command command, String label, String[] args,
-            EnumMap<Flag, String> info) {
-        if(!PermissionHandler.has(sender, PermissionNode.LOOK)) {
+    public boolean execute(final PlayerPoints plugin, final CommandSender sender,
+                           final Command command, final String label, final String[] args,
+                           final EnumMap<Flag, String> info) {
+        if (!PermissionHandler.has(sender, PermissionNode.LOOK)) {
             info.put(Flag.EXTRA, PermissionNode.LOOK.getNode());
             final String permMessage = LocalizeConfig.parseString(
                     LocalizeNode.PERMISSION_DENY, info);
-            if(!permMessage.isEmpty()) {
+            if (!permMessage.isEmpty()) {
                 sender.sendMessage(permMessage);
             }
             return true;
         }
-        if(args.length < 1) {
+        if (args.length < 1) {
             // Falsche Argumente
             final String argMessage = LocalizeConfig.parseString(
                     LocalizeNode.COMMAND_LOOK, info);
-            if(!argMessage.isEmpty()) {
+            if (!argMessage.isEmpty()) {
                 sender.sendMessage(argMessage);
             }
             return true;
@@ -50,7 +50,7 @@ public class LookCommand implements PointsCommand {
             playerName = args[0];
         }
         info.put(Flag.PLAYER, playerName);
-        info.put(Flag.AMOUNT, "" + plugin.getAPI().look(plugin.translateNameToUUID(playerName)));
+        info.put(Flag.AMOUNT, String.valueOf(plugin.getAPI().look(plugin.translateNameToUUID(playerName))));
         final String senderMessage = LocalizeConfig.parseString(LocalizeNode.POINTS_LOOK,
                 info);
         if(!senderMessage.isEmpty()) {

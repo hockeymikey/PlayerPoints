@@ -3,6 +3,7 @@ package org.black_ixx.playerpoints.update;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.version.Version;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class UpdateModule implements Comparable<UpdateModule> {
 
     /**
@@ -17,7 +18,7 @@ public abstract class UpdateModule implements Comparable<UpdateModule> {
 
     /**
      * Constructor.
-     * 
+     *
      * @param plugin
      *            - Plugin reference
      */
@@ -27,7 +28,7 @@ public abstract class UpdateModule implements Comparable<UpdateModule> {
 
     /**
      * Get the target version this module applies to.
-     * 
+     *
      * @return Version for update module.
      */
     public Version getTargetVersion() {
@@ -37,7 +38,7 @@ public abstract class UpdateModule implements Comparable<UpdateModule> {
     /**
      * Whether we should apply the update changes based on the current version
      * versus the target version.
-     * 
+     *
      * @param current
      *            - Current version.
      * @return True if the current version is lower than the target version.
@@ -47,8 +48,8 @@ public abstract class UpdateModule implements Comparable<UpdateModule> {
     }
 
     @Override
-    public int compareTo(UpdateModule o) {
-        return this.targetVersion.compareTo(o.getTargetVersion());
+    public int compareTo(final UpdateModule o) {
+        return this.targetVersion.compareTo(o.targetVersion);
     }
 
     /**

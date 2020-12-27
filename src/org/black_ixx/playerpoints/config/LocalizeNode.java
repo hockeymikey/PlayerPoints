@@ -72,13 +72,13 @@ public enum LocalizeNode {
     HELP_GIVEMULT("message.help.givemult",
             "&7/points givemult <int> <int2> &6: Generate points from multiplication results for given players"),
     HELP_TAKE("message.help.take",
-            "&7/points take <name> <points> &6: Take points from player"),
+              "&7/points take <name> <points> &6: Take points from player"),
     HELP_LOOK("message.help.look",
-            "&7/points look <name> &6: Lookup player's points"),
+              "&7/points look <name> &6: Lookup player's points"),
     HELP_SET("message.help.set",
-            "&7/points set <name> <points> &6: Set player's points to amount"),
+             "&7/points set <name> <points> &6: Set player's points to amount"),
     HELP_RESET("message.help.reset",
-            "&7/points reset <name> &6: Reset player's points to 0"),
+               "&7/points reset <name> &6: Reset player's points to 0"),
     HELP_PAY("message.help.pay",
             "&7/points pay <name> <points> &6: Send points to given player"),
     HELP_LEAD("message.help.lead",
@@ -90,17 +90,16 @@ public enum LocalizeNode {
     /**
      * Path and default value.
      */
-    private String path, def;
+    private final String path;
+    private final String def;
 
     /**
      * Private constructor.
-     * 
-     * @param path
-     *            - Path in config.
-     * @param def
-     *            - Default value to use.
+     *
+     * @param path - Path in config.
+     * @param def  - Default value to use.
      */
-    private LocalizeNode(String path, String def) {
+    LocalizeNode(final String path, final String def) {
         this.path = path;
         this.def = def;
     }

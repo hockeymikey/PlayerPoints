@@ -30,15 +30,14 @@ public enum PermissionNode {
     /**
      * Individual node path.
      */
-    private String node;
+    private final String node;
 
     /**
-     * Private constructor.
-     * 
-     * @param node
-     *            - Specific node.
+     * Constructor.
+     *
+     * @param node - Specific node.
      */
-    private PermissionNode(String node) {
+    PermissionNode(final String node) {
         this.node = prefix + node;
     }
 

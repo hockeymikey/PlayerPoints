@@ -1,25 +1,26 @@
 package org.black_ixx.playerpoints.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.services.IModule;
 import org.black_ixx.playerpoints.storage.StorageType;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Handler for the root plugin config.yml file.
  * 
  * @author Mitsugaru
  */
+@SuppressWarnings("WeakerAccess")
 public class RootConfig implements IModule {
 
     /**
      * Plugin instance.
      */
-    private PlayerPoints plugin;
+    private final PlayerPoints plugin;
     /**
      * Database info.
      */
@@ -29,21 +30,29 @@ public class RootConfig implements IModule {
      */
     public int retryLimit;
     /**
-     * Import / export sql, and vault options.
+     * Import / export sql, vault and vote options.
      */
-    public boolean importSQL, exportSQL, vault, hasPlayedBefore, autocompleteOnline, debugDatabase, debugUUID;
+    public boolean importSQL;
+    public boolean exportSQL;
+    public boolean vault;
+    public boolean hasPlayedBefore;
+    public boolean autocompleteOnline;
+    public boolean debugDatabase;
+    public boolean debugUUID;
     /**
      * Storage info.
      */
     public StorageType backend, importSource, exportSource;
+    public int voteAmount;
+    public boolean voteOnline;
+    public boolean voteEnabled;
 
     /**
      * Constructor.
-     * 
-     * @param plugin
-     *            - Plugin instance.
+     *
+     * @param plugin - Plugin instance.
      */
-    public RootConfig(PlayerPoints plugin) {
+    public RootConfig(final PlayerPoints plugin) {
         this.plugin = plugin;
     }
 
@@ -61,38 +70,41 @@ public class RootConfig implements IModule {
 
     /**
      * Load the settings from config.
-     * 
-     * @param config
-     *            - Config to read from.
+     *
+     * @param config - Config to read from.
      */
-    private void loadSettings(ConfigurationSection config) {
+    private void loadSettings(final ConfigurationSection config) {
         debugDatabase = config.getBoolean("debug.database", false);
         debugUUID = config.getBoolean("debug.uuid", false);
         vault = config.getBoolean("vault", false);
-        hasPlayedBefore = config.getBoolean("restrictions.hasPlayedBefore",
-                false);
+        hasPlayedBefore = config.getBoolean("restrictions.hasPlayedBefore", false);
+        voteEnabled = config.getBoolean("vote.enabled", false);
+        voteAmount = config.getInt("vote.amount", 100);
+        voteOnline = config.getBoolean("vote.online", false);
         autocompleteOnline = config.getBoolean("restrictions.autocompleteOnline", false);
     }
 
     /**
      * Load storage settings only on plugin enable / disable.
-     * 
+     *
      * @param config
      *            - Config to read from.
      */
-    private void loadStorageSettings(ConfigurationSection config) {
-        /**
+    private void loadStorageSettings(final ConfigurationSection config) {
+        /*
          * Storage
          */
         final String back = config.getString("storage");
-        if(back.equalsIgnoreCase("sqlite")) {
+        assert back != null;
+        if (back.equalsIgnoreCase("sqlite")) {
             backend = StorageType.SQLITE;
-        } else if(back.equalsIgnoreCase("mysql")) {
+        } else if (back.equalsIgnoreCase("mysql")) {
             backend = StorageType.MYSQL;
-        } else {
+        } else if (back.equalsIgnoreCase("yaml")) {
             backend = StorageType.YAML;
-        }
-        /**
+        } else
+            backend = StorageType.JSON;
+        /*
          * SQL info
          */
         host = config.getString("mysql.host", "localhost");
@@ -113,7 +125,8 @@ public class RootConfig implements IModule {
         }
         final String databaseExportSource = config.getString(
                 "mysql.export.source", "MYSQL");
-        if(databaseExportSource.equalsIgnoreCase("SQLITE")) {
+        assert databaseExportSource != null;
+        if (databaseExportSource.equalsIgnoreCase("SQLITE")) {
             exportSource = StorageType.SQLITE;
         } else {
             exportSource = StorageType.MYSQL;
@@ -134,7 +147,7 @@ public class RootConfig implements IModule {
      // Grab config
         final ConfigurationSection config = plugin.getConfig();
         // LinkedHashmap of defaults
-        final Map<String, Object> defaults = new LinkedHashMap<String, Object>();
+        final Map<String, Object> defaults = new LinkedHashMap<>();
         defaults.put("storage", "YAML");
         defaults.put("mysql.host", "localhost");
         defaults.put("mysql.port", 3306);
@@ -147,6 +160,9 @@ public class RootConfig implements IModule {
         defaults.put("mysql.export.use", false);
         defaults.put("mysql.export.source", "SQLITE");
         defaults.put("mysql.retry", 10);
+        defaults.put("vote.enabled", false);
+        defaults.put("vote.amount", 100);
+        defaults.put("vote.online", false);
         defaults.put("restrictions.autocompleteOnline", false);
         defaults.put("restrictions.hasPlayedBefore", false);
         defaults.put("debug.database", false);
@@ -167,6 +183,5 @@ public class RootConfig implements IModule {
     }
 
     @Override
-    public void closing() {
-    }
+    public void closing() { }
 }
